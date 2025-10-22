@@ -1,14 +1,15 @@
 package main
 
 import (
+	"booking-go/helper"
 	"fmt"
-	"strings"
+	"strconv"
 )
 
 const conferenceTickets int = 50
 
 var conferenceName = "Go Conference"
-var bookings = []string{}
+var bookings = make([]map[string]string, 0)
 var remaininTickets uint = 50
 
 func main() {
@@ -19,7 +20,7 @@ func main() {
 
 		userName, email, userTickets := getUserInput()
 
-		isValidTicket, isValidEmail, isValidName := validateUserInput(userName, email, userTickets)
+		isValidTicket, isValidEmail, isValidName := helper.ValidateUserInput(userName, email, userTickets, remaininTickets)
 
 		if isValidTicket && isValidEmail && isValidName {
 
@@ -49,18 +50,9 @@ func greetUsers() {
 func getFirstName() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking["userName"])
 	}
 	return firstNames
-}
-
-func validateUserInput(userName string, email string, userTickets uint) (bool, bool, bool) {
-	var isValidName bool = len(userName) >= 2
-	isValidEmail := strings.ContainsAny(email, "@")
-	isValidTicket := userTickets > 0 && userTickets <= remaininTickets
-
-	return isValidTicket, isValidEmail, isValidName
 }
 
 func getUserInput() (string, string, uint) {
@@ -82,7 +74,16 @@ func getUserInput() (string, string, uint) {
 
 func bookTicket(remaininTickets uint, userTickets uint, email string, userName string) {
 	remaininTickets = remaininTickets - userTickets
-	bookings = append(bookings, userName)
+
+	// create an empty map for a user
+	var userData = make(map[string]string)
+	userData["userName"] = userName
+	userData["email"] = email
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
+	bookings = append(bookings, userData)
+	fmt.Println(bookings)
+	fmt.Printf("list of bookings: %v\n", bookings)
 
 	fmt.Printf("Thank you %v for booking %v tickets. you will recieve email at %v mail address\n", userName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remaininTickets, conferenceName)
