@@ -3,6 +3,7 @@ package main
 import (
 	"booking-go/helper"
 	"fmt"
+	"time"
 )
 
 const conferenceTickets int = 50
@@ -29,7 +30,8 @@ func main() {
 
 		if isValidTicket && isValidEmail && isValidName {
 
-			bookTicket(remaininTickets, userTickets, email, userName)
+			bookTicket(userTickets, email, userName)
+			go sendTicket(userTickets, userName, email)
 
 			var firstNames = getFirstName()
 			fmt.Printf("the first names of bookings are: %v\n", firstNames)
@@ -77,7 +79,7 @@ func getUserInput() (string, string, uint) {
 	return userName, email, userTickets
 }
 
-func bookTicket(remaininTickets uint, userTickets uint, email string, userName string) {
+func bookTicket(userTickets uint, email string, userName string) {
 	remaininTickets = remaininTickets - userTickets
 
 	var userData = UserData{
@@ -87,9 +89,16 @@ func bookTicket(remaininTickets uint, userTickets uint, email string, userName s
 	}
 
 	bookings = append(bookings, userData)
-	fmt.Println(bookings)
 	fmt.Printf("list of bookings: %v\n", bookings)
 
 	fmt.Printf("Thank you %v for booking %v tickets. you will recieve email at %v mail address\n", userName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remaininTickets, conferenceName)
+}
+
+func sendTicket(userTickets uint, userName string, email string) {
+	time.Sleep(5 * time.Second)
+	var ticket = fmt.Sprintf("%v tickets for %v\n", userTickets, userName)
+	fmt.Println("**********")
+	fmt.Printf("Sending ticket:\n %v to email address %v\n", ticket, email)
+	fmt.Println("**********")
 }
