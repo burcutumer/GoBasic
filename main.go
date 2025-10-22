@@ -3,7 +3,6 @@ package main
 import (
 	"booking-go/helper"
 	"fmt"
-
 )
 
 const conferenceTickets int = 50
@@ -11,9 +10,10 @@ const conferenceTickets int = 50
 var conferenceName = "Go Conference"
 var remaininTickets uint = 50
 var bookings = make([]UserData, 0)
+
 type UserData struct {
-	userName string
-	email string
+	userName        string
+	email           string
 	numberOfTickets uint
 }
 
@@ -80,9 +80,9 @@ func getUserInput() (string, string, uint) {
 func bookTicket(remaininTickets uint, userTickets uint, email string, userName string) {
 	remaininTickets = remaininTickets - userTickets
 
-	var userData = UserData {
-		userName: userName,
-		email: email,
+	var userData = UserData{
+		userName:        userName,
+		email:           email,
 		numberOfTickets: userTickets,
 	}
 
